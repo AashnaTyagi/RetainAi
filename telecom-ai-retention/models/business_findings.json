@@ -1,0 +1,39 @@
+{
+  "note": "Results from the offline business analytics and segmentation study in notebooks/Analysis.ipynb (Phases 6, 8, 9).",
+  "overview": {
+    "total_customers": 7043,
+    "churned_customers": 1869,
+    "overall_churn_rate": 0.265,
+    "monthly_revenue_lost": 139131,
+    "annualized_revenue_lost": 1669570,
+    "historical_revenue_lost": 2862927
+  },
+  "top_decile_targeting": {
+    "capture_rate": 0.29,
+    "lift_over_random": 2.95,
+    "addressable_monthly_revenue": 41031,
+    "illustrative_retained_revenue_at_20pct_save_rate": 8206
+  },
+  "risk_by_contract": [
+    {"segment": "Month-to-month", "customers": 3875, "churn_rate": 0.427, "monthly_revenue_at_risk": 120847.10},
+    {"segment": "One year", "customers": 1473, "churn_rate": 0.113, "monthly_revenue_at_risk": 14118.45},
+    {"segment": "Two year", "customers": 1695, "churn_rate": 0.028, "monthly_revenue_at_risk": 4165.30}
+  ],
+  "risk_by_payment_method": [
+    {"segment": "Electronic check", "customers": 2365, "churn_rate": 0.453},
+    {"segment": "Mailed check", "customers": 1612, "churn_rate": 0.191},
+    {"segment": "Bank transfer (automatic)", "customers": 1544, "churn_rate": 0.167},
+    {"segment": "Credit card (automatic)", "customers": 1522, "churn_rate": 0.152}
+  ],
+  "risk_by_internet_service": [
+    {"segment": "Fiber optic", "customers": 3096, "churn_rate": 0.419, "avg_monthly_charge": 91.50},
+    {"segment": "DSL", "customers": 2421, "churn_rate": 0.190, "avg_monthly_charge": 58.10},
+    {"segment": "No internet", "customers": 1526, "churn_rate": 0.074, "avg_monthly_charge": 21.08}
+  ],
+  "customer_segments": [
+    {"segment": "High Risk / Premium / Established", "customers": 2332, "churn_rate": 0.441, "monthly_revenue": 183981.70},
+    {"segment": "High Risk / Budget / New Customers", "customers": 1726, "churn_rate": 0.289, "monthly_revenue": 58848.95},
+    {"segment": "Medium Risk / Premium / Long-Term Loyal", "customers": 1993, "churn_rate": 0.150, "monthly_revenue": 183425.55},
+    {"segment": "Low Risk / Budget / Long-Term Loyal", "customers": 992, "churn_rate": 0.044, "monthly_revenue": 29860.40}
+  ]
+}

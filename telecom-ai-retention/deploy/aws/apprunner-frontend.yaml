@@ -1,0 +1,24 @@
+# Same pattern as apprunner-backend.yaml -- see that file for the full
+# build/push/deploy commands. This is the frontend variant (port 8501).
+
+ServiceName: telecom-churn-frontend
+SourceConfiguration:
+  ImageRepository:
+    ImageIdentifier: "<account-id>.dkr.ecr.<region>.amazonaws.com/telecom-churn-frontend:latest"
+    ImageRepositoryType: ECR
+    ImageConfiguration:
+      Port: "8501"
+      RuntimeEnvironmentVariables:
+        - Name: PYTHONUNBUFFERED
+          Value: "1"
+  AutoDeploymentsEnabled: true
+InstanceConfiguration:
+  Cpu: "1 vCPU"
+  Memory: "2 GB"
+HealthCheckConfiguration:
+  Protocol: HTTP
+  Path: /_stcore/health
+  Interval: 10
+  Timeout: 5
+  HealthyThreshold: 1
+  UnhealthyThreshold: 3

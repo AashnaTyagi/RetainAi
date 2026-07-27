@@ -1,0 +1,36 @@
+# Render Blueprint (https://render.com/docs/blueprint-spec)
+#
+# Deploy: connect this repo in the Render dashboard ("New +" ->
+# "Blueprint") and point it at this file, or run `render blueprint launch`.
+#
+# Both services build from the multi-stage Dockerfiles in docker/,
+# which train the model fresh at BUILD time and are fully
+# self-contained -- no persistent disk, no pre-deploy hook, no
+# service-startup ordering needed.
+
+services:
+  - type: web
+    name: telecom-churn-backend
+    runtime: docker
+    dockerfilePath: ./docker/backend.Dockerfile
+    dockerContext: .
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+
+  - type: web
+    name: telecom-churn-frontend
+    runtime: docker
+    dockerfilePath: ./docker/frontend.Dockerfile
+    dockerContext: .
+    plan: starter
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: BACKEND_URL
+        fromService:
+          name: telecom-churn-backend
+          type: web
+          property: hostport

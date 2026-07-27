@@ -1,0 +1,45 @@
+# Both `backend` and `frontend` train their own model at BUILD time
+# (see the multi-stage Dockerfiles in docker/) and are fully
+# self-contained -- no shared volume, no service startup ordering
+# needed. This also means each service ends up with its OWN trained
+# model from its OWN build; for two services to serve the identical
+# model, rebuild them together (`docker compose build`) from the same
+# source commit rather than rebuilding one at a time.
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Optional: MLflow experiment tracking / registry UI, for the
+  # separate `docker/trainer.Dockerfile` retraining workflow (see that
+  # file's header comment). Not needed for backend/frontend to work.
+  mlflow-ui:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - mlflow_data:/app/mlruns_store
+    ports:
+      - "5000:5000"
+    command: >
+      bash -c "pip install --no-cache-dir mlflow>=2.14 &&
+               mlflow server --backend-store-uri sqlite:////app/mlruns_store/mlflow.db
+               --host 0.0.0.0 --port 5000"
+    restart: unless-stopped
+
+volumes:
+  mlflow_data:

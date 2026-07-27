@@ -1,0 +1,16 @@
+notebooks/
+tests/
+docs/
+.git/
+.dvc/
+mlflow.db
+mlruns/
+mlartifacts/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+*.log
+models/*.pkl
+models/*.csv

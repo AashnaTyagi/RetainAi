@@ -1,0 +1,18 @@
+{
+  "note": "Results from the offline model comparison study in notebooks/Analysis.ipynb (Phase 4: 10-model comparison, Phase 5: hyperparameter tuning). Not recomputed live in the app -- this is a static reference of validated results, consistent with decoupling the offline study from online model serving.",
+  "phase4_comparison": [
+    {"model": "Gradient Boosting", "accuracy": 0.780, "precision": 0.560, "recall": 0.791, "f1_score": 0.656, "roc_auc": 0.855},
+    {"model": "CatBoost", "accuracy": 0.795, "precision": 0.595, "recall": 0.705, "f1_score": 0.645, "roc_auc": 0.851},
+    {"model": "Logistic Regression", "accuracy": 0.781, "precision": 0.567, "recall": 0.727, "f1_score": 0.637, "roc_auc": 0.851},
+    {"model": "Random Forest", "accuracy": 0.778, "precision": 0.571, "recall": 0.643, "f1_score": 0.605, "roc_auc": 0.835},
+    {"model": "LightGBM", "accuracy": 0.776, "precision": 0.570, "recall": 0.619, "f1_score": 0.594, "roc_auc": 0.835},
+    {"model": "Voting Classifier", "accuracy": 0.781, "precision": 0.583, "recall": 0.603, "f1_score": 0.593, "roc_auc": 0.836},
+    {"model": "Stacking Classifier", "accuracy": 0.781, "precision": 0.586, "recall": 0.587, "f1_score": 0.586, "roc_auc": 0.838},
+    {"model": "XGBoost", "accuracy": 0.778, "precision": 0.581, "recall": 0.579, "f1_score": 0.580, "roc_auc": 0.818},
+    {"model": "Extra Trees", "accuracy": 0.771, "precision": 0.571, "recall": 0.547, "f1_score": 0.559, "roc_auc": 0.812},
+    {"model": "Decision Tree", "accuracy": 0.708, "precision": 0.458, "recall": 0.560, "f1_score": 0.504, "roc_auc": 0.662}
+  ],
+  "phase5_tuning_note": "RandomizedSearchCV + GridSearchCV tuned Random Forest, XGBoost, LightGBM, CatBoost. None beat Phase 4's untuned Gradient Boosting on the held-out test set (best tuned: XGBoost F1 0.653 vs Gradient Boosting F1 0.656) -- an honest negative result, kept as-is rather than discarded.",
+  "winner": "Gradient Boosting",
+  "winner_selection_criterion": "F1 score on churn class (balances catching churners against not over-flagging false positives)"
+}

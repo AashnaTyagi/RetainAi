@@ -1,0 +1,41 @@
+# Google Cloud Build + Cloud Run deployment for the backend.
+#
+# Deploy:
+#   gcloud builds submit --config deploy/gcp/cloudbuild-backend.yaml .
+#
+# Cloud Build builds the image in the cloud (no local Docker daemon
+# required) and deploys straight to Cloud Run.
+
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-f"
+      - "docker/backend.Dockerfile"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/telecom-churn-backend:$SHORT_SHA"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "gcr.io/$PROJECT_ID/telecom-churn-backend:$SHORT_SHA"
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "telecom-churn-backend"
+      - "--image=gcr.io/$PROJECT_ID/telecom-churn-backend:$SHORT_SHA"
+      - "--region=us-central1"
+      - "--platform=managed"
+      - "--port=8000"
+      - "--memory=2Gi"
+      - "--cpu=1"
+      - "--min-instances=0"
+      - "--max-instances=3"
+      - "--allow-unauthenticated"
+
+images:
+  - "gcr.io/$PROJECT_ID/telecom-churn-backend:$SHORT_SHA"

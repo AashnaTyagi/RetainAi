@@ -1,0 +1,17 @@
+stages:
+  train:
+    cmd: python -m src.train --no-promote
+    deps:
+      - data/Telco-Customer-Churn.csv
+      - src/feature_engineering.py
+      - src/preprocessing.py
+      - src/train.py
+    outs:
+      - models/churn_model.pkl
+      - models/preprocessor.pkl
+      - models/feature_columns.json
+      - models/test_reference.csv
+    metrics:
+      - models/metrics.json:
+          cache: false
+    always_changed: false

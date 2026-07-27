@@ -1,0 +1,42 @@
+schema: '2.0'
+stages:
+  train:
+    cmd: python -m src.train --no-promote
+    deps:
+    - path: data/Telco-Customer-Churn.csv
+      hash: md5
+      md5: 0f9de68e012bd3aed5fa7cdc9fc421af
+      size: 977501
+    - path: src/feature_engineering.py
+      hash: md5
+      md5: 9175c9416153a85765487d2c5a225c68
+      size: 5841
+    - path: src/preprocessing.py
+      hash: md5
+      md5: 38fdbed518097b8d011b0b73f224c2e6
+      size: 4653
+    - path: src/train.py
+      hash: md5
+      md5: 37c3166b1fa11ec8fa30cf1cbc45ebda
+      size: 10024
+    outs:
+    - path: models/churn_model.pkl
+      hash: md5
+      md5: a02701b9fad0363836b33154fd182558
+      size: 144312
+    - path: models/feature_columns.json
+      hash: md5
+      md5: 20a3530b647686360aa35dde9d6b604d
+      size: 1296
+    - path: models/metrics.json
+      hash: md5
+      md5: 2e5a227b04ae35c7c4e20019e4d81aa6
+      size: 427
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: a6a04052124100033569a9cb2356c179
+      size: 2915
+    - path: models/test_reference.csv
+      hash: md5
+      md5: d79c9a2a055989a50d29cf5f4cad2d27
+      size: 503979

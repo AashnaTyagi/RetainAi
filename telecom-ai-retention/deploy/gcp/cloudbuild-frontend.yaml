@@ -1,0 +1,38 @@
+# Same pattern as cloudbuild-backend.yaml -- frontend variant.
+#
+# Deploy:
+#   gcloud builds submit --config deploy/gcp/cloudbuild-frontend.yaml .
+
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "build"
+      - "-f"
+      - "docker/frontend.Dockerfile"
+      - "-t"
+      - "gcr.io/$PROJECT_ID/telecom-churn-frontend:$SHORT_SHA"
+      - "."
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      - "push"
+      - "gcr.io/$PROJECT_ID/telecom-churn-frontend:$SHORT_SHA"
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      - "run"
+      - "deploy"
+      - "telecom-churn-frontend"
+      - "--image=gcr.io/$PROJECT_ID/telecom-churn-frontend:$SHORT_SHA"
+      - "--region=us-central1"
+      - "--platform=managed"
+      - "--port=8501"
+      - "--memory=2Gi"
+      - "--cpu=1"
+      - "--min-instances=0"
+      - "--max-instances=3"
+      - "--allow-unauthenticated"
+
+images:
+  - "gcr.io/$PROJECT_ID/telecom-churn-frontend:$SHORT_SHA"

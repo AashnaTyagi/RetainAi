@@ -1,0 +1,40 @@
+# AWS App Runner service definition (apprunner.yaml is used when
+# deploying directly from source; this variant documents the
+# image-based deployment, which is the recommended path here since we
+# already have Dockerfiles).
+#
+# Deploy (after pushing the image to ECR — see the build commands below):
+#
+#   aws ecr create-repository --repository-name telecom-churn-backend
+#   aws ecr get-login-password | docker login --username AWS \
+#       --password-stdin <account-id>.dkr.ecr.<region>.amazonaws.com
+#   docker build -f docker/backend.Dockerfile -t telecom-churn-backend .
+#   docker tag telecom-churn-backend:latest \
+#       <account-id>.dkr.ecr.<region>.amazonaws.com/telecom-churn-backend:latest
+#   docker push <account-id>.dkr.ecr.<region>.amazonaws.com/telecom-churn-backend:latest
+#
+#   aws apprunner create-service --cli-input-yaml file://deploy/aws/apprunner-backend.yaml
+#
+# (Repeat with docker/frontend.Dockerfile and port 8501 for the frontend.)
+
+ServiceName: telecom-churn-backend
+SourceConfiguration:
+  ImageRepository:
+    ImageIdentifier: "<account-id>.dkr.ecr.<region>.amazonaws.com/telecom-churn-backend:latest"
+    ImageRepositoryType: ECR
+    ImageConfiguration:
+      Port: "8000"
+      RuntimeEnvironmentVariables:
+        - Name: PYTHONUNBUFFERED
+          Value: "1"
+  AutoDeploymentsEnabled: true
+InstanceConfiguration:
+  Cpu: "1 vCPU"
+  Memory: "2 GB"
+HealthCheckConfiguration:
+  Protocol: HTTP
+  Path: /health
+  Interval: 10
+  Timeout: 5
+  HealthyThreshold: 1
+  UnhealthyThreshold: 3

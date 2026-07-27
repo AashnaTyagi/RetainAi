@@ -1,0 +1,41 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Train model (tests run against real artifacts, not mocks)
+        run: python -m src.train --no-promote
+
+      - name: Run test suite
+        run: pytest --cov=src --cov=backend --cov-report=term-missing
+
+      - name: Verify Streamlit pages load
+        run: |
+          for page in app/Home.py app/pages/*.py; do
+            python -c "
+          from streamlit.testing.v1 import AppTest
+          at = AppTest.from_file('$page', default_timeout=60)
+          at.run()
+          assert not at.exception, f'$page failed: {at.exception}'
+          print(f'$page: OK')
+          "
+          done
