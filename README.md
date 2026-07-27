@@ -10,7 +10,7 @@
 ![Model](https://img.shields.io/badge/model-Gradient%20Boosting-orange)
 
 The Tests badge above is wired to a real CI workflow
-([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) that trains
+([`.github/workflows/tests.yml`](telecom-ai-retention/.github/workflows/tests.yml)) that trains
 the model and runs all 102 tests plus a Streamlit page-load check on every
 push, so it reflects a real, currently-passing pipeline rather than a static
 claim.
@@ -46,7 +46,7 @@ box, and sizes exactly how much of that revenue is recoverable through
 targeted retention outreach.
 
 The methodology went through a full research pipeline (see
-[`notebooks/Analysis.ipynb`](notebooks/Analysis.ipynb)) before being distilled
+[`notebooks/Analysis.ipynb`](telecom-ai-retention/notebooks/Analysis.ipynb)) before being distilled
 into the production `src/` package used by both the app and the API:
 
 | Stage | What it covers |
@@ -72,7 +72,7 @@ where they were found.
 
 ## Architecture
 
-See [`docs/architecture.md`](docs/architecture.md) for the full diagram plus
+See [`docs/architecture.md`](telecom-ai-retention/docs/architecture.md) for the full diagram plus
 the reasoning behind each major design decision. Short version:
 
 ```mermaid
@@ -154,7 +154,7 @@ App Runner / Azure Container Apps / GCP Cloud Run
 
 ```bash
 git clone https://github.com/AashnaTyagi/RetainAi.git
-cd RetainAi
+cd RetainAi/telecom-ai-retention
 pip install -r requirements.txt
 
 python -m src.train          # trains the model, generates all artifacts in models/
@@ -171,26 +171,26 @@ docker compose up --build
 ```
 
 Full testing and cloud-deployment instructions are in the sections below and
-in [`deploy/DEPLOYMENT.md`](deploy/DEPLOYMENT.md).
+in [`deploy/DEPLOYMENT.md`](telecom-ai-retention/deploy/DEPLOYMENT.md).
 
 ---
 
 ## Screenshots
 
 **Home**
-![Home](docs/screenshots/home.png)
+![Home](telecom-ai-retention/docs/screenshots/home.png)
 
 **Dashboard**
-![Dashboard](docs/screenshots/dashboard.png)
+![Dashboard](telecom-ai-retention/docs/screenshots/dashboard.png)
 
 **Customer Prediction**
-![Customer Prediction](docs/screenshots/prediction.png)
+![Customer Prediction](telecom-ai-retention/docs/screenshots/prediction.png)
 
 **Explain Prediction (SHAP)**
-![Explain Prediction](docs/screenshots/explain.png)
+![Explain Prediction](telecom-ai-retention/docs/screenshots/explain.png)
 
 **Batch Prediction**
-![Batch Prediction](docs/screenshots/batch.png)
+![Batch Prediction](telecom-ai-retention/docs/screenshots/batch.png)
 
 ---
 
@@ -233,7 +233,7 @@ Near-term, in rough priority order:
   independently import `src/`, which works but doesn't demonstrate the two
   services actually integrated — noted honestly in `deploy/DEPLOYMENT.md`)
 - Authentication (JWT + roles) and rate limiting before any public deployment
-  with real customer data (see `docs/API.md`)
+  with real customer data (see `telecom-ai-retention/docs/API.md`)
 - Role-based dashboards (CEO / Marketing / Sales / Customer Success / Admin)
 - Real-time monitoring (latency, drift, error rate) on top of the existing
   MLflow tracking
@@ -250,7 +250,7 @@ here so the direction is clear rather than promised as already built.
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md).
+See [`CONTRIBUTING.md`](telecom-ai-retention/CONTRIBUTING.md).
 
 ---
 
@@ -280,35 +280,40 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 ## Project Structure
 
 ```
-RetainAI/
-├── src/                   # Shared, reusable pipeline modules (single source of truth)
-│   ├── feature_engineering.py
-│   ├── preprocessing.py
-│   ├── train.py            # MLflow tracking + registry gating
-│   └── recommendations.py
-├── models/                 # Trained artifacts (generated) + static reference data
-├── data/                   # Source dataset (DVC-tracked)
-├── app/                    # Streamlit application (11 pages)
-├── backend/                 # FastAPI REST API (6 endpoints)
-├── docker/                 # Self-training multi-stage Dockerfiles
-├── deploy/                 # Render, Railway, AWS, Azure, GCP configs
-├── notebooks/Analysis.ipynb # Full validated research pipeline
-├── tests/                  # 102 tests: unit, API, model, data validation, reports
-├── .github/workflows/       # CI: trains model, runs tests, checks all app pages
-├── docs/
-│   ├── architecture.md
-│   └── API.md
-├── docker-compose.yml
-├── dvc.yaml
-├── pytest.ini
-├── CONTRIBUTING.md
-├── LICENSE
-└── requirements*.txt
+RetainAi/                          # repo root
+├── README.md
+├── .gitignore
+└── telecom-ai-retention/          # project code (see naming note above)
+    ├── src/                   # Shared, reusable pipeline modules (single source of truth)
+    │   ├── feature_engineering.py
+    │   ├── preprocessing.py
+    │   ├── train.py            # MLflow tracking + registry gating
+    │   └── recommendations.py
+    ├── models/                 # Trained artifacts (generated) + static reference data
+    ├── data/                   # Source dataset (DVC-tracked)
+    ├── app/                    # Streamlit application (11 pages)
+    ├── backend/                 # FastAPI REST API (6 endpoints)
+    ├── docker/                 # Self-training multi-stage Dockerfiles
+    ├── deploy/                 # Render, Railway, AWS, Azure, GCP configs
+    ├── notebooks/Analysis.ipynb # Full validated research pipeline
+    ├── tests/                  # 102 tests: unit, API, model, data validation, reports
+    ├── .github/workflows/       # CI: trains model, runs tests, checks all app pages
+    ├── docs/
+    │   ├── architecture.md
+    │   └── API.md
+    ├── docker-compose.yml
+    ├── dvc.yaml
+    ├── pytest.ini
+    ├── CONTRIBUTING.md
+    ├── LICENSE
+    └── requirements*.txt
 ```
 
 ---
 
 ## Testing
+
+Run from inside `telecom-ai-retention/` (see Installation above):
 
 ```bash
 python -m src.train
@@ -320,12 +325,16 @@ Coverage: 100% on `feature_engineering`, `preprocessing`, `recommendations`,
 and the API schemas; 88% on the backend. `train.py` is validated by direct
 execution rather than unit tests — documented honestly rather than padded.
 
-CI ([`.github/workflows/tests.yml`](.github/workflows/tests.yml)) runs this
+CI ([`.github/workflows/tests.yml`](telecom-ai-retention/.github/workflows/tests.yml)) runs this
 exact sequence — train, test, verify every Streamlit page loads — on every
 push and pull request to `main`.
 
 ---
 
+## Author
+
+**Aashna Tyagi** — [github.com/AashnaTyagi](https://github.com/AashnaTyagi)
+
 ## License
 
-MIT — see [`LICENSE`](LICENSE).
+MIT — see [`LICENSE`](telecom-ai-retention/LICENSE).
